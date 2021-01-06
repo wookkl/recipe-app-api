@@ -37,3 +37,29 @@ ENV PYTHONUNBUFFRED 1
 ### USER
 
 명령을 실행할 사용자 계정을 설정한다. RUN, CMD, ENTRYPOINT에 적용된다.
+
+## Travis CI
+
+지속적 통합 툴로 깃헙으로 push할때 자동으로 테스트들과 프로젝트를 체킹해준다.
+
+### 설정 방법
+
+.travis.yml 파일생성
+
+## Flake8
+
+linting tool
+
+### .flake8
+
+exclude 해준 파일 또는 폴더는 Flake8 linting에서 제외된다.
+
+```yml
+[flake8]
+exclude =
+  migrations,
+  __pycache__,
+  manage.py,
+  settings.py
+
+```
