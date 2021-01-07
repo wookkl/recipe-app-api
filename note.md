@@ -44,7 +44,27 @@ ENV PYTHONUNBUFFRED 1
 
 ### 설정 방법
 
-.travis.yml 파일생성
+1. .travis.yml 파일생성
+2.
+
+```yml
+#언어 설정
+language: python
+python:
+  #파이썬 버전 설정
+  - "3.6"
+
+services:
+  #서비스 설정
+  - docker
+
+# 기본적인 패키지를 설치
+before_script: pip install docker-compose
+
+script:
+  #실제 스크립팅하는 부분, sh -c 는 쉘 스크립팅한다는 뜻임
+  - docker-compose run app sh -c "python manage.py test && flake8"
+```
 
 ## Flake8
 
@@ -63,3 +83,30 @@ exclude =
   settings.py
 
 ```
+
+## unit test
+
+1. 애플리케이션 안에 tests.py 생성
+2.
+
+```python
+from django.test import TestCase
+# 테스트하고 싶은 함수 import
+from app.calc import add
+
+
+class CalcTest(TestCase):
+    # 테스트 함수 이름은 무조건 test로 시작해야 함
+    def test_add_numbers(self):
+        """ Test that two number are added together """
+        self.assertEqual(add(3, 8), 11)
+```
+
+## TDD
+
+- 먼저 유닛테스트시 테스트의 결과를 먼저 정의 후에 코드를 짠다.
+
+### 장점
+
+1. "테스트할 수 있는 코드를 작성해야한다"라고 생각하기 때문에 코드에 대한 생각을 개선하는데에 도움이 많이 된다.
+2. 일반적으로 테스트하기 쉬운 코드는 유지 관리가 쉽고 테스트에 대해 미리 생각하지 않고 작성되는 코드보다 품질이 좋다.
