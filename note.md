@@ -34,6 +34,25 @@
 ENV PYTHONUNBUFFRED 1
 ```
 
+### apk: alpine linux 패키지 매니저
+
+postgres 클라이언트를 설치하지만 로컬캐시를 사용하지 않음(--no-cache)
+
+```Dockerfile
+RUN apk add --update --no-cache postgresql-client
+```
+
+### --virtual
+
+컨테이너내에 전역으로 패키지를 설치하지 않고 .tmp-build-deps에 종속석인 가상 패키지를 만들고 전역에 추가한다.
+
+```Dockerfile
+RUN apk add --update --no-cache --virtual .tmp-build-deps \
+    gcc libc-dev linux-headers postgresql-dev
+RUN pip install -r /requirements.txt
+RUN apk del .tmp-build-deps
+```
+
 ### USER
 
 명령을 실행할 사용자 계정을 설정한다. RUN, CMD, ENTRYPOINT에 적용된다.
@@ -110,3 +129,21 @@ class CalcTest(TestCase):
 
 1. "테스트할 수 있는 코드를 작성해야한다"라고 생각하기 때문에 코드에 대한 생각을 개선하는데에 도움이 많이 된다.
 2. 일반적으로 테스트하기 쉬운 코드는 유지 관리가 쉽고 테스트에 대해 미리 생각하지 않고 작성되는 코드보다 품질이 좋다.
+
+## docker-compose
+
+`depends_on: ` 컨테이너에 의존성을 추가할 수 있다.
+
+## Moking
+
+### 목적
+
+- Change behavior of dependencies
+- To avoid unintented side-effects
+- To isolate the specific piece of code
+
+### 유닛 테스트시 이점
+
+- 외부 서비스에 의존하지 않는다.
+  이유는 그 외부 서비스가 잘 작동하는지 보장하지 않고 신뢰성이 떨어진다.
+- 이메일을 보내는 유닛 테스트일 때 실제로 보내지 않고 파라미터 체크하는 등 잘 함수가 호출 되었는지 보장해준다.
